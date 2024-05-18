@@ -1,5 +1,5 @@
 import './assets/main.css'
-import 'primevue/resources/themes/lara-light-teal/theme.css'
+import 'primevue/resources/themes/aura-light-teal/theme.css'
 import 'primeflex/primeflex.css'
 
 import { createApp } from 'vue'
