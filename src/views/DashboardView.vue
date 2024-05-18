@@ -43,7 +43,7 @@ const products = [
   <div class="w-full container px-4 py-6">
     <div id="title">
       <h1 class="text-6xl font-bold">
-        VoteVendo<br />
+        VendoVote<br />
         Dashboard
       </h1>
       <p class="text-700 my-2">
