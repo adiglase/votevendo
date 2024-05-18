@@ -1,4 +1,6 @@
 <script setup>
+import TheHeader from '@/components/TheHeader.vue'
+
 const products = [
   {
     id: '1000',
@@ -41,16 +43,7 @@ const products = [
 
 <template>
   <div class="w-full container px-4 py-6">
-    <div id="title">
-      <h1 class="text-6xl font-bold">
-        VendoVote<br />
-        Dashboard
-      </h1>
-      <p class="text-700 my-2">
-        Participate in vendor selection with confidence using our secure platform.
-      </p>
-      <p class="text-500 text-sm">0x620...e292F7 | Connected With Metamask</p>
-    </div>
+    <TheHeader></TheHeader>
 
     <div id="elections" class="mt-8 flex flex-wrap gap-4">
       <Card class="elections-list flex-1">
