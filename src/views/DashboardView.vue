@@ -54,7 +54,7 @@ const products = [
 
     <div id="elections" class="mt-8 flex flex-wrap gap-4">
       <Card class="elections-list flex-1">
-        <template #title><h4 class="font-bold">Incoming Elections</h4></template>
+        <template #title><h4 class="font-bold">Incoming Vendor Elections</h4></template>
         <template #content>
           <DataView :value="products">
             <template #list="slotProps">
@@ -88,7 +88,7 @@ const products = [
         </template>
       </Card>
       <Card class="elections-list flex-1">
-        <template #title><h4 class="font-bold">Past Elections</h4></template>
+        <template #title><h4 class="font-bold">Past Vendor Elections</h4></template>
         <template #content>
           <DataView :value="products">
             <template #list="slotProps">
