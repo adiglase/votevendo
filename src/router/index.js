@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '@/views/HomeView.vue'
 import DashboardView from '@/views/DashboardView.vue'
+import CreateElectionView from '@/views/CreateElectionView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -19,6 +20,14 @@ const router = createRouter({
       component: DashboardView,
       meta: {
         pageName: 'Dashboard'
+      }
+    },
+    {
+      path: '/create-election',
+      name: 'create-election',
+      component: CreateElectionView,
+      meta: {
+        pageName: 'Create New Vendor Election'
       }
     },
     {
