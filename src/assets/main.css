@@ -1,12 +1,4 @@
-body {
-  min-height: 100vh;
-  transition:
-    color 0.5s,
-    background-color 0.5s;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+@import './base.css';
 
 #app {
   min-height: 100vh;
