@@ -45,7 +45,7 @@ const products = [
   <div class="w-full container px-4 py-6">
     <TheHeader></TheHeader>
 
-    <div id="elections" class="mt-8 flex flex-wrap gap-4">
+    <div id="elections" class="mx-auto mt-8 flex flex-wrap gap-4">
       <Card class="elections-list flex-1">
         <template #title><h4 class="font-bold">Incoming Vendor Elections</h4></template>
         <template #content>
@@ -54,9 +54,7 @@ const products = [
               <div v-for="(item, index) in slotProps.items" :key="index">
                 <div class="flex flex-row align-items-center py-2">
                   <div class="flex flex-row justify-content-between align-items-center flex-1">
-                    <div
-                      class="flex flex-row md:flex-column justify-content-between align-items-start"
-                    >
+                    <div class="flex flex-column justify-content-between align-items-start">
                       <div>
                         <div class="font-medium text-900">{{ item.name }}</div>
                       </div>
@@ -88,9 +86,7 @@ const products = [
               <div v-for="(item, index) in slotProps.items" :key="index">
                 <div class="flex flex-row align-items-center py-2">
                   <div class="flex flex-row justify-content-between align-items-center flex-1">
-                    <div
-                      class="flex flex-row md:flex-column justify-content-between align-items-start"
-                    >
+                    <div class="flex flex-column justify-content-between align-items-start">
                       <div>
                         <div class="font-medium text-900">{{ item.name }}</div>
                       </div>
@@ -120,12 +116,8 @@ const products = [
 </template>
 
 <style scoped>
-#title {
-  display: block;
-  margin: 0 auto;
-  width: 600px;
-  max-width: 100%;
-  text-align: center;
+#elections {
+  max-width: 900px;
 }
 
 .elections-list {
