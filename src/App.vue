@@ -1,8 +1,8 @@
 <script setup></script>
 
 <template>
-  <Toast />
-  <RouterView />
+    <Toast />
+    <RouterView />
 </template>
 
 <style scoped></style>
