@@ -3,6 +3,8 @@ import HomeView from '@/views/HomeView.vue'
 import DashboardView from '@/views/DashboardView.vue'
 import CreateElectionView from '@/views/CreateElectionView.vue'
 import VoteView from '@/views/VoteView.vue'
+import { getAccounts, isMetamaskInstalled } from '@/utils'
+import ToastEventBus from 'primevue/toasteventbus'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -12,7 +14,8 @@ const router = createRouter({
       name: 'home',
       component: HomeView,
       meta: {
-        pageName: 'Home'
+        pageName: 'Home',
+        noAuth: true
       }
     },
     {
@@ -48,6 +51,36 @@ const router = createRouter({
       component: () => import('../views/AboutView.vue')
     }
   ]
+})
+
+router.beforeEach(async (to, from, next) => {
+  if (!to.meta.noAuth) {
+    if (!isMetamaskInstalled()) {
+      next({ name: 'home' })
+      ToastEventBus.emit('add', {
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Metamask is not instaleld',
+        life: 3000
+      })
+
+      return
+    }
+
+    if (getAccounts.length === 0) {
+      next({ name: 'home' })
+      ToastEventBus.emit('add', {
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Connect your metamask wallet first!',
+        life: 3000
+      })
+
+      return
+    }
+  }
+
+  next()
 })
 
 export default router
