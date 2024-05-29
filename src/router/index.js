@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '@/views/HomeView.vue'
 import DashboardView from '@/views/DashboardView.vue'
 import CreateElectionView from '@/views/CreateElectionView.vue'
+import VoteView from '@/views/VoteView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -28,6 +29,14 @@ const router = createRouter({
       component: CreateElectionView,
       meta: {
         pageName: 'Create New Vendor Election'
+      }
+    },
+    {
+      path: '/vote',
+      name: 'vote',
+      component: VoteView,
+      meta: {
+        pageName: 'Cast Your Vote'
       }
     },
     {
