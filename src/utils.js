@@ -13,4 +13,8 @@ function getAccounts() {
     return web3.eth.getAccounts()
 }
 
-export { isMetamaskInstalled, getAccounts }
+function requestAccounts() {
+    return web3.eth.requestAccounts()
+}
+
+export { web3, isMetamaskInstalled, getAccounts, requestAccounts }

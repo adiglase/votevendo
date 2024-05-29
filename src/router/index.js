@@ -67,7 +67,8 @@ router.beforeEach(async (to, from, next) => {
             return
         }
 
-        if (getAccounts.length === 0) {
+        const accounts = await getAccounts()
+        if (accounts.length === 0) {
             next({ name: 'home' })
             ToastEventBus.emit('add', {
                 severity: 'error',
