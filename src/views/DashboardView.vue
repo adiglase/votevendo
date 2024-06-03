@@ -1,57 +1,15 @@
-<script setup>
-import TheHeader from '@/components/TheHeader.vue'
-
-const products = [
-    {
-        id: '1000',
-        code: 'f230fh0g3',
-        name: 'Bamboo Watch',
-        description: 'Product Description',
-        image: 'bamboo-watch.jpg',
-        price: 65,
-        category: 'Accessories',
-        quantity: 24,
-        inventoryStatus: 'INSTOCK',
-        rating: 5
-    },
-    {
-        id: '2000',
-        code: 'f230fh0g3',
-        name: 'Badmf wdwoierhwo i Watch',
-        description: 'Product Description',
-        image: 'bamboo-watch.jpg',
-        price: 65,
-        category: 'Accessories',
-        quantity: 24,
-        inventoryStatus: 'INSTOCK',
-        rating: 5
-    },
-    {
-        id: '3000',
-        code: 'f230fh0g3',
-        name: 'Bamboo Watch',
-        description: 'Product Description',
-        image: 'bamboo-watch.jpg',
-        price: 65,
-        category: 'Accessories',
-        quantity: 24,
-        inventoryStatus: 'INSTOCK',
-        rating: 5
-    }
-]
-</script>
-
 <template>
-    <div class="w-full container px-4 py-6">
+    <div class="w-full container">
         <TheHeader></TheHeader>
 
-        <div id="elections" class="mx-auto mt-8 flex flex-wrap gap-4">
+        <div id="elections" class="mx-auto mt-4 flex flex-wrap gap-4">
             <Card class="elections-list flex-1">
                 <template #title>Incoming Vendor Elections</template>
                 <template #content>
-                    <DataView :value="products">
+                    <ProgressSpinner v-if="isLoading" style="width: 50px; height: 50px" />
+                    <DataView v-else :value="incomingElections">
                         <template #list="slotProps">
-                            <div v-for="(item, index) in slotProps.items" :key="index">
+                            <div v-for="(election, index) in slotProps.items" :key="index">
                                 <div class="flex flex-row align-items-center py-2">
                                     <div
                                         class="flex flex-row justify-content-between align-items-center flex-1"
@@ -61,12 +19,12 @@ const products = [
                                         >
                                             <div>
                                                 <div class="font-medium text-900">
-                                                    {{ item.name }}
+                                                    {{ election.name }}
                                                 </div>
                                             </div>
                                             <div>
                                                 <div class="text-xs font-light">
-                                                    15 May 2024 20:22:22
+                                                    {{ election.deadline }}
                                                 </div>
                                             </div>
                                         </div>
@@ -89,9 +47,10 @@ const products = [
             <Card class="elections-list flex-1">
                 <template #title>Past Vendor Elections</template>
                 <template #content>
-                    <DataView :value="products">
+                    <ProgressSpinner v-if="isLoading" style="width: 50px; height: 50px" />
+                    <DataView v-else :value="pastElections">
                         <template #list="slotProps">
-                            <div v-for="(item, index) in slotProps.items" :key="index">
+                            <div v-for="(election, index) in slotProps.items" :key="index">
                                 <div class="flex flex-row align-items-center py-2">
                                     <div
                                         class="flex flex-row justify-content-between align-items-center flex-1"
@@ -101,12 +60,12 @@ const products = [
                                         >
                                             <div>
                                                 <div class="font-medium text-900">
-                                                    {{ item.name }}
+                                                    {{ election.name }}
                                                 </div>
                                             </div>
                                             <div>
                                                 <div class="text-xs font-light">
-                                                    15 May 2024 20:22:22
+                                                    {{ election.deadline }}
                                                 </div>
                                             </div>
                                         </div>
@@ -130,6 +89,55 @@ const products = [
         </div>
     </div>
 </template>
+
+<script setup>
+import { utils } from 'web3'
+import TheHeader from '@/components/TheHeader.vue'
+import { getElections } from '@/services/election'
+import { onMounted, ref } from 'vue'
+
+const incomingElections = ref([])
+const pastElections = ref([])
+const isLoading = ref(false)
+
+onMounted(async () => {
+    isLoading.value = true
+
+    const electionList = await getElectionList()
+
+    incomingElections.value = electionList[0]
+    pastElections.value = electionList[1]
+
+    isLoading.value = false
+})
+
+async function getElectionList() {
+    const elections = await getElections()
+    const incomingElections = []
+    const pastElections = []
+
+    elections.forEach((election) => {
+        const deadline = utils.toNumber(election.deadline)
+        const hasClosed = Date.now() > deadline
+
+        const electionObj = {
+            id: utils.toNumber(election.id),
+            name: election.name,
+            deadline: new Date(deadline * 1000).toLocaleString(),
+            hasVoted: election.hasVoted,
+            hasClosed: hasClosed
+        }
+
+        if (hasClosed) {
+            pastElections.push(electionObj)
+        } else {
+            incomingElections.push(electionObj)
+        }
+    })
+
+    return [incomingElections, pastElections]
+}
+</script>
 
 <style scoped>
 #elections {

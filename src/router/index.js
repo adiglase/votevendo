@@ -3,7 +3,8 @@ import HomeView from '@/views/HomeView.vue'
 import DashboardView from '@/views/DashboardView.vue'
 import CreateElectionView from '@/views/CreateElectionView.vue'
 import VoteView from '@/views/VoteView.vue'
-import { getAccounts, isMetamaskInstalled } from '@/utils'
+import { isMetamaskInstalled } from '@/utils'
+import { getAccounts } from '@/services/account'
 import ToastEventBus from 'primevue/toasteventbus'
 
 const router = createRouter({

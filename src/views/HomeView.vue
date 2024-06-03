@@ -31,7 +31,7 @@
 </template>
 
 <script setup>
-import { getAccounts, requestAccounts } from '@/utils'
+import { getAccounts, requestAccounts } from '@/services/account'
 import { onMounted, ref } from 'vue'
 import { useToast } from 'primevue/usetoast'
 

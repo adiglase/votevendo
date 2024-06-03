@@ -1,25 +1,65 @@
 <template>
-    <div id="title">
-        <h1 class="text-6xl font-bold mt-0 mb-2">
-            VendoVote<br />
-            <span class="text-primary font-bold">{{ $route.meta.pageName }}</span>
-        </h1>
-        <p class="text-700 my-0">
-            Participate in vendor selection with confidence using our secure platform.
-        </p>
-        <p class="text-500 text-sm">{{ walletAddr }} | Connected With Metamask</p>
+    <div class="card">
+        <Menubar class="px-4 py-3" :model="items">
+            <template #start>
+                <h1 class="logo font-bold m-0 mr-4">VendoVote</h1>
+            </template>
+            <template #item="{ item, props, hasSubmenu, root }">
+                <a class="flex align-items-center" v-bind="props.action">
+                    <span :class="item.icon" />
+                    <span class="ml-2">{{ item.label }}</span>
+                    <Badge
+                        v-if="item.badge"
+                        :class="{ 'ml-auto': !root, 'ml-2': root }"
+                        :value="item.badge"
+                    />
+                    <span
+                        v-if="item.shortcut"
+                        class="ml-auto border-1 surface-border border-round surface-100 text-xs p-1"
+                        >{{ item.shortcut }}</span
+                    >
+                    <i
+                        v-if="hasSubmenu"
+                        :class="[
+                            'pi pi-angle-down',
+                            { 'pi-angle-down ml-2': root, 'pi-angle-right ml-auto': !root }
+                        ]"
+                    ></i>
+                </a>
+            </template>
+            <template #end>
+                <div class="text-500 ml-4">{{ walletAddr }}</div>
+            </template>
+        </Menubar>
     </div>
 </template>
 
 <script setup>
-import { getAccounts } from '@/utils'
+import router from '@/router'
+import { getAccounts } from '@/services/account'
 import { onMounted, ref } from 'vue'
 
 const walletAddr = ref('')
+const items = ref([
+    {
+        label: 'Home',
+        icon: 'pi pi-home',
+        command: () => {
+            router.push({ name: 'home' })
+        }
+    },
+    {
+        label: 'Dashboard',
+        icon: 'pi pi-align-justify',
+        command: () => {
+            router.push({ name: 'dashboard' })
+        }
+    }
+])
 
 onMounted(async () => {
     const accounts = await getAccounts()
-    walletAddr.value = `${accounts[0].slice(0, 10)}...${accounts[0].slice(-10)}`
+    walletAddr.value = `${accounts[0].slice(0, 5)}...${accounts[0].slice(-5)}`
 })
 </script>
 
@@ -30,5 +70,8 @@ onMounted(async () => {
     width: 600px;
     max-width: 100%;
     text-align: center;
+}
+.logo {
+    font-size: 24px !important;
 }
 </style>
