@@ -54,6 +54,13 @@ const items = ref([
         command: () => {
             router.push({ name: 'dashboard' })
         }
+    },
+    {
+        label: 'Create Election',
+        icon: 'pi pi-file-plus',
+        command: () => {
+            router.push({ name: 'create-election' })
+        }
     }
 ])
 

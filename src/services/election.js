@@ -8,4 +8,12 @@ async function getElections() {
     return elections
 }
 
-export { getElections }
+async function createElection({ name, startDate, endDate, candidates, voterList }) {
+    const accounts = await getAccounts()
+
+    await contractInstance.methods
+        .createElection(name, startDate, endDate, voterList, candidates)
+        .send({ from: accounts[0] })
+}
+
+export { getElections, createElection }

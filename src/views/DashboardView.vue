@@ -24,7 +24,7 @@
                                             </div>
                                             <div>
                                                 <div class="text-xs font-light">
-                                                    {{ election.deadline }}
+                                                    {{ election.endDate }}
                                                 </div>
                                             </div>
                                         </div>
@@ -65,7 +65,7 @@
                                             </div>
                                             <div>
                                                 <div class="text-xs font-light">
-                                                    {{ election.deadline }}
+                                                    {{ election.endDate }}
                                                 </div>
                                             </div>
                                         </div>
@@ -115,15 +115,16 @@ async function getElectionList() {
     const elections = await getElections()
     const incomingElections = []
     const pastElections = []
+    const nowEpoc = new Date().getTime() / 1000
 
     elections.forEach((election) => {
-        const deadline = utils.toNumber(election.deadline)
-        const hasClosed = Date.now() > deadline
+        const endDate = utils.toNumber(election.endDate)
+        const hasClosed = nowEpoc > endDate
 
         const electionObj = {
             id: utils.toNumber(election.id),
             name: election.name,
-            deadline: new Date(deadline * 1000).toLocaleString(),
+            endDate: new Date(endDate * 1000).toLocaleString(),
             hasVoted: election.hasVoted,
             hasClosed: hasClosed
         }

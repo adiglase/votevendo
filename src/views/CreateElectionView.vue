@@ -1,90 +1,12 @@
-<script setup>
-import TheHeader from '@/components/TheHeader.vue'
-
-import { useToast } from 'primevue/usetoast'
-import { reactive } from 'vue'
-import { ref } from 'vue'
-import { FilterMatchMode } from 'primevue/api'
-
-const toast = useToast()
-
-const form = reactive({
-    name: '',
-    startDate: '',
-    endDate: '',
-    voterList: ''
-})
-const dt = ref()
-const addresses = ref([])
-const selectedAddresses = ref()
-const addressToAdd = ref()
-
-const candidates = ref([])
-const selectedCandidates = ref()
-const candidateToAdd = ref()
-
-const filters = ref({
-    global: { value: null, matchMode: FilterMatchMode.CONTAINS }
-})
-
-function addCandidate() {
-    if (candidateToAdd.value) {
-        if (!candidates.value.some((val) => val.name === candidateToAdd.value)) {
-            candidates.value.push({
-                name: candidateToAdd.value.trim()
-            })
-            candidateToAdd.value = ''
-        } else {
-            toast.add({ severity: 'error', summary: 'Fail', detail: 'Candidates exist' })
-        }
-    }
-}
-
-function deleteSelectedCandidates() {
-    candidates.value = candidates.value.filter((val) => !selectedCandidates.value.includes(val))
-    selectedCandidates.value = null
-    toast.add({
-        severity: 'success',
-        summary: 'Successful',
-        detail: 'Candidates Deleted',
-        life: 3000
-    })
-}
-
-function addAddress() {
-    if (addressToAdd.value) {
-        if (!addresses.value.some((val) => val.address === addressToAdd.value)) {
-            addresses.value.push({
-                address: addressToAdd.value.trim()
-            })
-            addressToAdd.value = ''
-        } else {
-            toast.add({ severity: 'error', summary: 'Fail', detail: 'Addresses exist' })
-        }
-    }
-}
-
-function deleteSelectedAddresses() {
-    addresses.value = addresses.value.filter((val) => !selectedAddresses.value.includes(val))
-    selectedAddresses.value = null
-    toast.add({
-        severity: 'success',
-        summary: 'Successful',
-        detail: 'Addresses Deleted',
-        life: 3000
-    })
-}
-</script>
-
 <template>
-    <div class="w-full container px-4 py-6">
+    <div class="w-full container">
         <TheHeader></TheHeader>
 
         <div id="create-election-form" class="my-4 text-900">
-            <form class="m-auto">
+            <form class="m-auto" @submit.prevent="onSubmitNewElection">
                 <div class="mb-3 flex flex-column">
                     <label for="username" class="block mb-3">Name</label>
-                    <InputText id="username" v-model="form.name" />
+                    <InputText id="username" v-model="form.name" required />
                 </div>
 
                 <div class="mb-3 card flex flex-wrap gap-3 p-fluid">
@@ -95,18 +17,24 @@ function deleteSelectedAddresses() {
                             v-model="form.startDate"
                             showTime
                             hourFormat="24"
+                            :pt="{ input: { required: true } }"
                         />
                     </div>
                     <div class="flex-auto">
                         <label for="end-date" class="block mb-2">End Date</label>
-                        <Calendar id="end-date" v-model="form.endDate" showTime hourFormat="24" />
+                        <Calendar
+                            id="end-date"
+                            :pt="{ input: { required: true } }"
+                            v-model="form.endDate"
+                            showTime
+                            hourFormat="24"
+                        />
                     </div>
                 </div>
 
                 <div class="mb-6 flex flex-column">
                     <DataTable
-                        ref="dt"
-                        :value="candidates"
+                        :value="form.candidates"
                         v-model:selection="selectedCandidates"
                         dataKey="name"
                         :filters="filters"
@@ -146,8 +74,7 @@ function deleteSelectedAddresses() {
 
                 <div class="mb-3 flex flex-column">
                     <DataTable
-                        ref="dt"
-                        :value="addresses"
+                        :value="form.voterAddresses"
                         v-model:selection="selectedAddresses"
                         dataKey="address"
                         :paginator="true"
@@ -203,12 +130,170 @@ function deleteSelectedAddresses() {
 
                 <div class="flex justify-content-end">
                     <Button label="Cancel" severity="secondary" />
-                    <Button label="Submit" class="ml-2" />
+                    <Button :loading="isLoading" label="Submit" type="submit" class="ml-2" />
                 </div>
             </form>
         </div>
     </div>
 </template>
+
+<script setup>
+import TheHeader from '@/components/TheHeader.vue'
+
+import { useToast } from 'primevue/usetoast'
+import { reactive } from 'vue'
+import { ref, toRaw } from 'vue'
+import { FilterMatchMode } from 'primevue/api'
+import { createElection } from '@/services/election'
+
+const toast = useToast()
+
+const isLoading = ref(false)
+
+const form = reactive({
+    name: '',
+    startDate: '',
+    endDate: '',
+    voterAddresses: [],
+    candidates: []
+})
+
+const selectedAddresses = ref()
+const addressToAdd = ref()
+
+const selectedCandidates = ref()
+const candidateToAdd = ref()
+
+const filters = ref({
+    global: { value: null, matchMode: FilterMatchMode.CONTAINS }
+})
+
+function addCandidate() {
+    if (candidateToAdd.value) {
+        if (!form.candidates.some((val) => val.name === candidateToAdd.value)) {
+            form.candidates.push({
+                name: candidateToAdd.value.trim()
+            })
+            candidateToAdd.value = ''
+        } else {
+            toast.add({
+                severity: 'error',
+                summary: 'Fail',
+                detail: 'Candidates exist',
+                life: 3000
+            })
+        }
+    }
+}
+
+function deleteSelectedCandidates() {
+    form.candidates = form.candidates.filter((val) => !selectedCandidates.value.includes(val))
+    selectedCandidates.value = null
+    toast.add({
+        severity: 'success',
+        summary: 'Successful',
+        detail: 'Candidates Deleted',
+        life: 3000
+    })
+}
+
+function addAddress() {
+    if (addressToAdd.value) {
+        if (!form.voterAddresses.some((val) => val.address === addressToAdd.value)) {
+            form.voterAddresses.push({
+                address: addressToAdd.value.trim()
+            })
+            addressToAdd.value = ''
+        } else {
+            toast.add({ severity: 'error', summary: 'Fail', detail: 'Addresses exist', life: 3000 })
+        }
+    }
+}
+
+function deleteSelectedAddresses() {
+    form.voterAddresses = form.voterAddresses.filter(
+        (val) => !selectedAddresses.value.includes(val)
+    )
+    selectedAddresses.value = null
+    toast.add({
+        severity: 'success',
+        summary: 'Successful',
+        detail: 'Addresses Deleted',
+        life: 3000
+    })
+}
+
+function validateForm(nowEpoch, startDateEpoch, endDateEpoch) {
+    if (endDateEpoch < nowEpoch) {
+        toast.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'End date must be in the future date',
+            life: 3000
+        })
+        return false
+    }
+
+    if (startDateEpoch > endDateEpoch) {
+        toast.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Start date must be < end date',
+            life: 3000
+        })
+        return false
+    }
+
+    if (form.candidates.length < 2) {
+        toast.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Need to have atleast 2 candidates',
+            life: 3000
+        })
+        return false
+    }
+
+    if (form.voterAddresses.length < 2) {
+        toast.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Need to have atleast 2 voters',
+            life: 3000
+        })
+        return false
+    }
+
+    return true
+}
+
+async function onSubmitNewElection() {
+    isLoading.value = true
+
+    const nowEpoch = new Date() / 1000
+    const startDateEpoch = new Date(form.startDate) / 1000
+    const endDateEpoch = new Date(form.endDate) / 1000
+
+    if (!validateForm(nowEpoch, startDateEpoch, endDateEpoch)) {
+        isLoading.value = false
+        return
+    }
+
+    await createElection({
+        name: form.name,
+        startDate: startDateEpoch,
+        endDate: endDateEpoch,
+        candidates: toRaw(form.candidates).map((candidate) => {
+            return candidate['name']
+        }),
+        voterList: toRaw(form.voterAddresses).map((voter) => {
+            return voter['address']
+        })
+    })
+
+    isLoading.value = false
+}
+</script>
 
 <style scoped>
 form {

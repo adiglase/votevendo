@@ -1,5 +1,38 @@
 [
     {
+        "inputs": [
+            {
+                "internalType": "string",
+                "name": "_name",
+                "type": "string"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_startDate",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_endDate",
+                "type": "uint256"
+            },
+            {
+                "internalType": "address[]",
+                "name": "_voters",
+                "type": "address[]"
+            },
+            {
+                "internalType": "string[]",
+                "name": "_candidates",
+                "type": "string[]"
+            }
+        ],
+        "name": "createElection",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
         "inputs": [],
         "stateMutability": "nonpayable",
         "type": "constructor"
@@ -22,12 +55,36 @@
             {
                 "indexed": false,
                 "internalType": "uint256",
-                "name": "deadline",
+                "name": "startDate",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "endDate",
                 "type": "uint256"
             }
         ],
         "name": "ElectionCreated",
         "type": "event"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_electionId",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_candidateId",
+                "type": "uint256"
+            }
+        ],
+        "name": "vote",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
     },
     {
         "anonymous": false,
@@ -68,34 +125,6 @@
         "type": "function"
     },
     {
-        "inputs": [
-            {
-                "internalType": "string",
-                "name": "_name",
-                "type": "string"
-            },
-            {
-                "internalType": "uint256",
-                "name": "_deadline",
-                "type": "uint256"
-            },
-            {
-                "internalType": "address[]",
-                "name": "_voters",
-                "type": "address[]"
-            },
-            {
-                "internalType": "string[]",
-                "name": "_candidates",
-                "type": "string[]"
-            }
-        ],
-        "name": "createElection",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
         "inputs": [],
         "name": "electionCount",
         "outputs": [
@@ -130,7 +159,12 @@
             },
             {
                 "internalType": "uint256",
-                "name": "deadline",
+                "name": "startDate",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "endDate",
                 "type": "uint256"
             },
             {
@@ -174,7 +208,12 @@
             },
             {
                 "internalType": "uint256",
-                "name": "deadline",
+                "name": "startDate",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "endDate",
                 "type": "uint256"
             },
             {
@@ -236,7 +275,12 @@
                     },
                     {
                         "internalType": "uint256",
-                        "name": "deadline",
+                        "name": "startDate",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "endDate",
                         "type": "uint256"
                     },
                     {
@@ -264,24 +308,6 @@
             }
         ],
         "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "_electionId",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "_candidateId",
-                "type": "uint256"
-            }
-        ],
-        "name": "vote",
-        "outputs": [],
-        "stateMutability": "nonpayable",
         "type": "function"
     }
 ]
