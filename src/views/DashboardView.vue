@@ -30,11 +30,22 @@
                                         </div>
                                         <div class="flex flex-column md:align-items-end gap-5">
                                             <div class="flex flex-row-reverse md:flex-row gap-2">
-                                                <Button
-                                                    size="small"
-                                                    label="Vote"
-                                                    class="flex-auto md:flex-initial white-space-nowrap"
-                                                ></Button>
+                                                <RouterLink
+                                                    :to="{
+                                                        name: 'vote',
+                                                        params: { id: election.id }
+                                                    }"
+                                                >
+                                                    <Button
+                                                        size="small"
+                                                        :label="
+                                                            getElectionActionLabel(
+                                                                election.hasVoted
+                                                            )
+                                                        "
+                                                        class="flex-auto md:flex-initial white-space-nowrap"
+                                                    ></Button>
+                                                </RouterLink>
                                             </div>
                                         </div>
                                     </div>
@@ -71,12 +82,19 @@
                                         </div>
                                         <div class="flex flex-column md:align-items-end gap-5">
                                             <div class="flex flex-row-reverse md:flex-row gap-2">
-                                                <Button
-                                                    size="small"
-                                                    label="View"
-                                                    class="flex-auto md:flex-initial white-space-nowrap"
-                                                    severity="info"
-                                                ></Button>
+                                                <RouterLink
+                                                    :to="{
+                                                        name: 'vote',
+                                                        params: { id: election.id }
+                                                    }"
+                                                >
+                                                    <Button
+                                                        size="small"
+                                                        label="View"
+                                                        class="flex-auto md:flex-initial white-space-nowrap"
+                                                        severity="info"
+                                                    ></Button>
+                                                </RouterLink>
                                             </div>
                                         </div>
                                     </div>
@@ -110,6 +128,11 @@ onMounted(async () => {
 
     isLoading.value = false
 })
+
+function getElectionActionLabel(hasVoted) {
+    if (hasVoted) return 'View'
+    return 'Vote'
+}
 
 async function getElectionList() {
     const elections = await getElections()

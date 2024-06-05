@@ -36,7 +36,7 @@ const router = createRouter({
             }
         },
         {
-            path: '/vote',
+            path: '/:id/vote',
             name: 'vote',
             component: VoteView,
             meta: {

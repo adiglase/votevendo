@@ -145,6 +145,8 @@ import { reactive } from 'vue'
 import { ref, toRaw } from 'vue'
 import { FilterMatchMode } from 'primevue/api'
 import { createElection } from '@/services/election'
+import { regularDateTimeToEpoch } from '@/utils'
+import router from '@/router'
 
 const toast = useToast()
 
@@ -271,25 +273,37 @@ async function onSubmitNewElection() {
     isLoading.value = true
 
     const nowEpoch = new Date() / 1000
-    const startDateEpoch = new Date(form.startDate) / 1000
-    const endDateEpoch = new Date(form.endDate) / 1000
+    const startDateEpoch = regularDateTimeToEpoch(form.startDate)
+    const endDateEpoch = regularDateTimeToEpoch(form.endDate)
 
     if (!validateForm(nowEpoch, startDateEpoch, endDateEpoch)) {
         isLoading.value = false
         return
     }
 
-    await createElection({
-        name: form.name,
-        startDate: startDateEpoch,
-        endDate: endDateEpoch,
-        candidates: toRaw(form.candidates).map((candidate) => {
-            return candidate['name']
-        }),
-        voterList: toRaw(form.voterAddresses).map((voter) => {
-            return voter['address']
+    try {
+        await createElection({
+            name: form.name,
+            startDate: startDateEpoch,
+            endDate: endDateEpoch,
+            candidates: toRaw(form.candidates).map((candidate) => {
+                return candidate['name']
+            }),
+            voterList: toRaw(form.voterAddresses).map((voter) => {
+                return voter['address']
+            })
         })
-    })
+
+        router.push({ name: 'dashboard' })
+        toast.add({
+            severity: 'success',
+            summary: 'Success',
+            detail: 'Election created successfully',
+            life: 3000
+        })
+    } catch (err) {
+        console.log(err.message)
+    }
 
     isLoading.value = false
 }

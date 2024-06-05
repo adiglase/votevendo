@@ -16,4 +16,22 @@ async function createElection({ name, startDate, endDate, candidates, voterList 
         .send({ from: accounts[0] })
 }
 
-export { getElections, createElection }
+async function getElectionDetail({ electionId, isIncludeVoter, isIncludeResult }) {
+    const accounts = await getAccounts()
+
+    return await contractInstance.methods
+        .getElectionDetails(electionId, isIncludeVoter, isIncludeResult)
+        .call({ from: accounts[0] })
+}
+
+async function vote({ electionId, candidateId }) {
+    const accounts = await getAccounts()
+
+    await contractInstance.methods.vote(electionId, candidateId).send({
+        from: accounts[0]
+    })
+
+    return true
+}
+
+export { getElections, createElection, getElectionDetail, vote }
