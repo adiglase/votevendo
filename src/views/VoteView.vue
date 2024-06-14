@@ -2,13 +2,19 @@
     <div class="w-full container">
         <TheHeader></TheHeader>
 
-        <ProgressSpinner
-            v-if="isLoadingData"
-            style="width: 50px; height: 50px"
-            class="mt-4 mx-auto block"
-        />
+        <div class="vote-container">
+            <ProgressSpinner
+                v-if="isLoadingData"
+                style="width: 50px; height: 50px"
+                class="mt-4 mx-auto block"
+            />
 
-        <CandidateSelection v-else :electionDetail="electionData" />
+            <CandidateSelection v-if="!isLoadingData" :electionDetail="electionData" />
+            <VoteResult
+                v-if="!isLoadingData && electionData.hasEnded"
+                :electionData="electionData"
+            />
+        </div>
     </div>
 </template>
 
@@ -40,9 +46,10 @@ onMounted(async () => {
         endDate: utils.toNumber(electionDetail.endDate),
         hasVoted: electionDetail.hasVoted,
         votedChoice: utils.toNumber(electionDetail.votedChoice),
-        results: electionDetail.results,
-        voterChoices: electionDetail.voterChoices,
-        voterList: electionDetail.voterList
+        results: electionDetail.results.map((res) => utils.toNumber(res)),
+        voterChoices: electionDetail.voterChoices.map((res) => utils.toNumber(res)),
+        voterList: electionDetail.voterList,
+        hasEnded: electionDetail.hasEnded
     }
     isLoadingData.value = false
 })
@@ -57,4 +64,10 @@ function formatCandidateOptions(candidates) {
 }
 </script>
 
-<style></style>
+<style scoped>
+.vote-container {
+    display: block;
+    margin: auto;
+    max-width: 800px;
+}
+</style>

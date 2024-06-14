@@ -3,7 +3,7 @@
         <h3 class="text-center">{{ electionName }}</h3>
         <p class="text-center text-500 text-sm">Deadline: {{ electionDeadline }}</p>
 
-        <div class="flex justify-content-center mt-2">
+        <div v-if="!electionDetail.hasEnded" class="flex justify-content-center mt-2">
             <SelectButton
                 :disabled="isCanVote"
                 class="w-full grid grid"
@@ -13,7 +13,7 @@
                 :pt="{ button: { class: 'vote-btn col-12 md:col-6 p-2' } }"
             />
         </div>
-        <div class="flex mt-4">
+        <div v-if="!electionDetail.hasEnded" class="flex mt-4">
             <Button
                 class="block ml-auto"
                 severity="secondary"
@@ -34,7 +34,7 @@
 <script setup>
 import router from '@/router'
 import { vote } from '@/services/election'
-import { epochDateTimeToRegular, regularDateTimeToEpoch } from '@/utils'
+import { epochDateTimeToRegular } from '@/utils'
 import { useToast } from 'primevue/usetoast'
 import { computed, ref, toRaw, watch } from 'vue'
 import { useRoute } from 'vue-router'
@@ -65,7 +65,7 @@ watch(
 )
 
 const isCanVote = computed(() => {
-    return hasVoted.value || props.electionDetail.endDate < regularDateTimeToEpoch(new Date())
+    return hasVoted.value || props.electionDetail.hasEnded
 })
 
 function populateElectionDetail(electionDetail) {

@@ -169,16 +169,6 @@
                 "internalType": "uint256",
                 "name": "_electionId",
                 "type": "uint256"
-            },
-            {
-                "internalType": "bool",
-                "name": "_isIncludeVoter",
-                "type": "bool"
-            },
-            {
-                "internalType": "bool",
-                "name": "_isIncludeResult",
-                "type": "bool"
             }
         ],
         "name": "getElectionDetails",
@@ -244,6 +234,11 @@
                 "internalType": "uint256",
                 "name": "votedChoice",
                 "type": "uint256"
+            },
+            {
+                "internalType": "bool",
+                "name": "hasEnded",
+                "type": "bool"
             }
         ],
         "stateMutability": "view",

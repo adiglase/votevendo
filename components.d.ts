@@ -13,6 +13,7 @@ declare module 'vue' {
     Calendar: typeof import('primevue/calendar')['default']
     CandidateSelection: typeof import('./src/components/CandidateSelection.vue')['default']
     Card: typeof import('primevue/card')['default']
+    Chart: typeof import('primevue/chart')['default']
     Column: typeof import('primevue/column')['default']
     DataTable: typeof import('primevue/datatable')['default']
     DataView: typeof import('primevue/dataview')['default']
@@ -31,8 +32,12 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SelectButton: typeof import('primevue/selectbutton')['default']
+    TabMenu: typeof import('primevue/tabmenu')['default']
+    TabPanel: typeof import('primevue/tabpanel')['default']
+    TabView: typeof import('primevue/tabview')['default']
     TheHeader: typeof import('./src/components/TheHeader.vue')['default']
     TheWelcome: typeof import('./src/components/TheWelcome.vue')['default']
+    VoteResult: typeof import('./src/components/VoteResult.vue')['default']
     WelcomeItem: typeof import('./src/components/WelcomeItem.vue')['default']
   }
 }
