@@ -12,7 +12,12 @@
                 </div>
             </TabPanel>
             <TabPanel header="Vote Choice List">
-                <div>2</div>
+                <div class="card">
+                    <DataTable :value="getVoterChoice">
+                        <Column field="address" header="Address"></Column>
+                        <Column field="choice" header="Choice"></Column>
+                    </DataTable>
+                </div>
             </TabPanel>
         </TabView>
     </div>
@@ -28,6 +33,24 @@ onMounted(() => {
     chartOptions.value = setChartOptions()
 })
 
+const shuffle = (arr) => {
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1))
+        ;[arr[i], arr[j]] = [arr[j], arr[i]]
+    }
+    return arr
+}
+
+const candidates = computed(() => {
+    const res = {}
+
+    props.electionData.candidates.forEach((candidate) => {
+        res[candidate.value] = candidate
+    })
+
+    return res
+})
+
 const getChartData = computed(() => {
     if (props.electionData.hasEnded) {
         const chartLabels = props.electionData.candidates.map((candidate) => candidate.name)
@@ -36,6 +59,21 @@ const getChartData = computed(() => {
     }
 
     return [[], []]
+})
+
+const getVoterChoice = computed(() => {
+    const res = []
+
+    for (let i = 0; i < props.electionData.voterList.length; i++) {
+        const choice = props.electionData.voterChoices[i]
+
+        res.push({
+            address: props.electionData.voterList[i],
+            choice: choice === 0 ? '-' : candidates.value[choice].name
+        })
+    }
+
+    return shuffle(res)
 })
 
 const chartData = ref()
