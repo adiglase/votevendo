@@ -28,7 +28,10 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="flex flex-column md:align-items-end gap-5">
+                                        <div
+                                            v-if="!isAdmin"
+                                            class="flex flex-column md:align-items-end gap-5"
+                                        >
                                             <div class="flex flex-row-reverse md:flex-row gap-2">
                                                 <RouterLink
                                                     :to="{
@@ -112,11 +115,14 @@
 import { utils } from 'web3'
 import TheHeader from '@/components/TheHeader.vue'
 import { getElections } from '@/services/election'
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
+import { getAccounts } from '@/services/account'
+import { ownerAddress } from '@/env'
 
 const incomingElections = ref([])
 const pastElections = ref([])
 const isLoading = ref(false)
+const walletAddr = ref('')
 
 onMounted(async () => {
     isLoading.value = true
@@ -126,7 +132,15 @@ onMounted(async () => {
     incomingElections.value = electionList[0]
     pastElections.value = electionList[1]
 
+    const account = await getAccounts()
+    walletAddr.value = account[0]
+
     isLoading.value = false
+})
+
+const isAdmin = computed(() => {
+    if (walletAddr.value) return walletAddr.value === ownerAddress
+    return false
 })
 
 function getElectionActionLabel(hasVoted) {

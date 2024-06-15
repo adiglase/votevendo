@@ -28,16 +28,17 @@
                 </a>
             </template>
             <template #end>
-                <div class="text-500 ml-4">{{ walletAddr }}</div>
+                <div class="text-500 ml-4">{{ compressedWalletAddr }}</div>
             </template>
         </Menubar>
     </div>
 </template>
 
 <script setup>
+import { ownerAddress } from '@/env'
 import router from '@/router'
 import { getAccounts } from '@/services/account'
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 
 const walletAddr = ref('')
 const items = ref([
@@ -60,13 +61,25 @@ const items = ref([
         icon: 'pi pi-file-plus',
         command: () => {
             router.push({ name: 'create-election' })
+        },
+        visible: () => {
+            return isAdmin.value
         }
     }
 ])
 
 onMounted(async () => {
     const accounts = await getAccounts()
-    walletAddr.value = `${accounts[0].slice(0, 5)}...${accounts[0].slice(-5)}`
+    walletAddr.value = accounts[0]
+})
+
+const compressedWalletAddr = computed(() => {
+    return `${walletAddr.value.slice(0, 5)}...${walletAddr.value.slice(-5)}`
+})
+
+const isAdmin = computed(() => {
+    if (walletAddr.value) return walletAddr.value === ownerAddress
+    return false
 })
 </script>
 
