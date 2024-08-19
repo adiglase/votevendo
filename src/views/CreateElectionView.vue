@@ -129,7 +129,7 @@
                 </div>
 
                 <div class="flex justify-content-end">
-                    <Button label="Cancel" severity="secondary" />
+                    <Button label="Cancel" severity="secondary" @click="router.push({ name: 'dashboard' })" />
                     <Button :loading="isLoading" label="Submit" type="submit" class="ml-2" />
                 </div>
             </form>
