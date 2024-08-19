@@ -69,7 +69,7 @@ const getVoterChoice = computed(() => {
 
         res.push({
             address: props.electionData.voterList[i],
-            choice: choice === 0 ? '-' : candidates.value[choice].name
+            choice: choice === 0 ? '-' : `${candidates.value[choice].name} (ID: ${candidates.value[choice].value})`
         })
     }
 

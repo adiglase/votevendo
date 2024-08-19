@@ -1,6 +1,6 @@
 <template>
     <form class="vote-section block mx-auto my-4 flex flex-column justify-content-center">
-        <h3 class="text-center">{{ electionName }}</h3>
+        <h3 class="text-center">{{ electionName }} {{ `(ID: ${electionDetail.id})` }}</h3>
         <p class="text-center text-500 text-sm">Deadline: {{ electionDeadline }}</p>
 
         <div v-if="!electionDetail.hasEnded" class="flex justify-content-center mt-2">
@@ -9,7 +9,7 @@
                 class="w-full grid grid"
                 v-model="selectedCandidate"
                 :options="candidateOptions"
-                option-label="name"
+                :option-label="(e) => `${e.name} (ID: ${e.value})`"
                 :pt="{ button: { class: 'vote-btn col-12 md:col-6 p-2' } }"
             />
         </div>

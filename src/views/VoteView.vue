@@ -40,6 +40,7 @@ onMounted(async () => {
     })
 
     electionData.value = {
+        id: utils.toNumber(electionDetail.id),
         name: electionDetail.name,
         candidates: formatCandidateOptions(electionDetail.candidates),
         startDate: utils.toNumber(electionDetail.startDate),
