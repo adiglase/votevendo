@@ -154,6 +154,7 @@ async function getElectionList() {
     }
 
     if (hasClosed) {
+      if (pastElections.length >= 7) continue  // limit the past elections list
       pastElections.push(electionObj)
     } else {
       incomingElections.push(electionObj)
